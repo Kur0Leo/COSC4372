@@ -2,9 +2,11 @@ import cv2
 import numpy as np
 
 
-class Filtering:
-    def __init__(self, image):
+class FFT:
+    def __init__(self, image, row, col):
         self.image = image
+        self.row = row
+        self.col = col
 
     def post_process_image(self, image):
         log = np.log(image)
@@ -30,10 +32,10 @@ class Filtering:
 
         return fsimage
 
-    def filter(self):
+    def get_fft(self):
         fft = np.fft.fft2(self.image)
         fft_shift = np.fft.fftshift(fft)
 
-        mag_dft = self.post_process_image(np.abs(fft_shift))
+        mag_fft = self.post_process_image(np.abs(fft_shift))
 
-        return mag_dft
+        return [mag_fft, fft_shift]
