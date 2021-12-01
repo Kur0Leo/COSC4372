@@ -3,11 +3,12 @@ import numpy as np
 
 
 class Sampling:
-    def __init__(self, data, row, col):
+    def __init__(self, data, row, col, trajectory):
         self.mag_data = data[0]
         self.data = data[1]
         self.row = row
         self.col = col
+        self.trajectory = trajectory
 
     def get_fully_sampled(self):
         shape = np.shape(self.data)
@@ -36,3 +37,9 @@ class Sampling:
                 sampling_data[i][j] = self.data[i][j]
 
         return [mag_sampling_data, sampling_data]
+
+    def get_sample(self):
+        if self.trajectory == 0:
+            return self.get_fully_sampled()
+        else:
+            return self.get_undersampled()
