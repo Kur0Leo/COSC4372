@@ -11,54 +11,38 @@ class AcquireImage:
         self.column = column
 
     def acquire_missing_data(self, position):
-        if position == "grid":
-            img_obj = InverseFFT(self.data)
-            img = img_obj.get_ifft()
-            return img
-        elif position == "top":
-            shape = np.shape(self.data)
+        shape = np.shape(self.data)
+        if position == "top":
             for i in range(0, shape[0] // 2):
                 for j in range(0, shape[1] // 2):
                     self.data[shape[0] - i - 1][shape[1] - j - 1] = np.conj(self.data[i][j])
             for i in range(0, shape[0] // 2):
                 for j in range(shape[1] - 1, shape[1] // 2, -1):
                     self.data[shape[0] - i - 1][shape[1] - j - 1] = np.conj(self.data[i][j])
-            img_obj = InverseFFT(self.data)
-            img = img_obj.get_ifft()
-            return img
         elif position == "bottom":
-            shape = np.shape(self.data)
             for i in range(shape[0] - 1, shape[0] // 2, -1):
                 for j in range(0, shape[1] // 2):
                     self.data[shape[0] - i - 1][shape[1] - j - 1] = np.conj(self.data[i][j])
             for i in range(shape[0] - 1, shape[0] // 2, -1):
                 for j in range(shape[1] - 1, shape[1] // 2, -1):
                     self.data[shape[0] - i - 1][shape[1] - j - 1] = np.conj(self.data[i][j])
-            img_obj = InverseFFT(self.data)
-            img = img_obj.get_ifft()
-            return img
         elif position == "right":
-            shape = np.shape(self.data)
             for i in range(0, shape[0] // 2):
                 for j in range(0, shape[1] // 2):
                     self.data[shape[0] - i - 1][shape[1] - j - 1] = np.conj(self.data[i][j])
             for i in range(shape[0] - 1, shape[0] // 2, -1):
                 for j in range(0, shape[1] // 2):
                     self.data[shape[0] - i - 1][shape[1] - j - 1] = np.conj(self.data[i][j])
-            img_obj = InverseFFT(self.data)
-            img = img_obj.get_ifft()
-            return img
-        else:
-            shape = np.shape(self.data)
+        elif position == "left":
             for i in range(0, shape[0] // 2):
                 for j in range(shape[1] - 1, shape[1] // 2, -1):
                     self.data[shape[0] - i - 1][shape[1] - j - 1] = np.conj(self.data[i][j])
             for i in range(shape[0] - 1, shape[0] // 2, -1):
                 for j in range(shape[1] - 1, shape[1] // 2, -1):
                     self.data[shape[0] - i - 1][shape[1] - j - 1] = np.conj(self.data[i][j])
-            img_obj = InverseFFT(self.data)
-            img = img_obj.get_ifft()
-            return img
+        img_obj = InverseFFT(self.data)
+        img = img_obj.get_ifft()
+        return img
 
     def get_image(self):
         if self.half_fourier == 0:
