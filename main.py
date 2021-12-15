@@ -4,7 +4,7 @@ from frequency_filtering.fft import FFT
 from frequency_filtering.ifft import InverseFFT
 from frequency_filtering.sampling import Sampling
 from frequency_filtering.symmetry import ConjugateSymmetry
-from frequency_filtering.filtering import Filtering
+from frequency_filtering.acquire_image import AcquireImage
 from PIL import Image, ImageTk
 import numpy as np
 import cv2
@@ -178,16 +178,13 @@ def get_ifft():
 def reconstruct_image():
     global ac_trajectory
     global sampling_data
-    global ifft_image
+    global half_fourier
 
     output = None
     image_name = "phantom"
-    if ac_trajectory == 0 and ifft_image is not None:
-        reconstruct_obj = Filtering(ifft_image, sampling_data[1], row, column)
-        output = reconstruct_obj.fully_sampled_filtering()
-    elif ac_trajectory == 1 and sampling_data is not None:
-        reconstruct_obj = Filtering(ifft_image, sampling_data[1], row, column)
-        output = reconstruct_obj.undersampled_filtering()
+    if sampling_data is not None:
+        reconstruct_obj = AcquireImage(sampling_data[1], half_fourier, row, column)
+        output = reconstruct_obj.get_image()
 
     if output is not None:
         array_to_image = Image.fromarray(output)
@@ -200,6 +197,13 @@ def reconstruct_image():
         image_label = tk.Label(fft3_frm, image=image)
         image_label.image = image
         image_label.grid(row=0, column=0)
+
+
+def accquisition():
+    get_fft()
+    acquire_sampling_data()
+    get_ifft()
+    reconstruct_image()
 
 
 tk.Label(input_frm, text="Input Phantom", bg='#fff').grid(row=0, padx=5)
@@ -251,13 +255,7 @@ S4.grid(row=7, column=1, pady=(0, 5))
 save_btn = tk.Button(sampling_frm, text='Save Setting', command=lambda: save_setting())
 save_btn.grid(row=8, columnspan=2 , padx=10, pady=10)
 
-run_fft_btn = tk.Button(ac_frm, text='Obtain k-space Data', command=lambda: get_fft())
-run_fft_btn.grid(row=0, padx=10, pady=10)
-sampling_fft_btn = tk.Button(ac_frm, text='Sampling k-space', command=lambda: acquire_sampling_data())
-sampling_fft_btn.grid(row=1, padx=10, pady=(0, 10))
-get_ifft_btn = tk.Button(ac_frm, text='Obtain Sampling Image', command=lambda: get_ifft())
-get_ifft_btn.grid(row=2, padx=10, pady=(0, 10))
-#reconstruct_btn = tk.Button(ac_frm, text='Reconstruct Image', command=lambda: reconstruct_image())
-#reconstruct_btn.grid(row=3, padx=10, pady=(0, 10))
+run_accquisition_btn = tk.Button(ac_frm, text='Start Accquisition', command=lambda: accquisition())
+run_accquisition_btn.grid(row=0, padx=10, pady=10)
 
 window.mainloop()
