@@ -5,6 +5,7 @@ from frequency_filtering.ifft import InverseFFT
 from frequency_filtering.sampling import Sampling
 from frequency_filtering.symmetry import ConjugateSymmetry
 from frequency_filtering.acquire_image import AcquireImage
+from frequency_filtering.analyze import GetDiff
 from PIL import Image, ImageTk
 import numpy as np
 import cv2
@@ -176,6 +177,7 @@ def get_ifft():
 
 
 def reconstruct_image():
+    global input_image
     global ac_trajectory
     global sampling_data
     global half_fourier
@@ -187,6 +189,12 @@ def reconstruct_image():
         output = reconstruct_obj.get_image()
 
     if output is not None:
+        obj = GetDiff(input_image, output)
+        different = obj.get_diff()
+
+        diff_name = 'output/' + image_name + "_diff.jpg"
+        cv2.imwrite(diff_name, different)
+
         array_to_image = Image.fromarray(output)
         array_to_image = array_to_image.resize((350, 350))
         image = ImageTk.PhotoImage(image=array_to_image)
