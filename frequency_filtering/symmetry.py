@@ -51,7 +51,7 @@ class ConjugateSymmetry:
         sampling_data = np.zeros(shape, dtype=complex)
 
         if self.half_fourier == 3:
-            if self.trajectory == 1:
+            if self.trajectory == 0:
                 for i in range(0, shape[0]):
                     for j in range(0, shape[1] // 2):
                         mag_sampling_data[i][j] = self.mag_data[i][j]
@@ -66,7 +66,7 @@ class ConjugateSymmetry:
 
                 return [mag_sampling_data, sampling_data]
         else:
-            if self.trajectory == 1:
+            if self.trajectory == 0:
                 for i in range(0, shape[0]):
                     for j in range(shape[1] // 2, shape[1]):
                         mag_sampling_data[i][j] = self.mag_data[i][j]
